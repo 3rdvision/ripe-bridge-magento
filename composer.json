@@ -1,0 +1,26 @@
+{
+    "name": "platforme/bridge",
+    "description": "Customisation and Made-to-Order for your business",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Platforme",
+            "email": "tech@platforme.com"
+        }
+    ],
+    "repositories":
+    {
+      "url": "github.com/3rdvision/ripe-bridge-magento.git", 
+      "type": "git"
+    },
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Platforme\\Bridge\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}
