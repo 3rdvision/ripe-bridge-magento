@@ -1,11 +1,10 @@
-# RIPE Bridge Magento
+# RIPE Bridge for Magento 2
 
 ## Installation
 
-### Using composer
+### Using Composer
 
-Run the following commands in Magento 2 root folder:
-
+Run the following commands in Magento installation root folder:
 
 ```bash
 composer config repositories.3rdvision-ripe-bridge-magento git git@github.com:3rdvision/ripe-bridge-magento.git
