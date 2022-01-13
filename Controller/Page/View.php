@@ -34,7 +34,7 @@ class View extends Action
     public function execute()
     {
         $result = $this->resultJsonFactory->create();
-        $data = ['message' => 'Hello moto'];
+        $data = ['message' => 'Hello'];
 
         return $result->setData($data);
     }
