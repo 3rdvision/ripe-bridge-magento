@@ -1,20 +1,21 @@
 {
-    "name": "platforme/bridge",
+    "name": "3rdvision/ripe-bridge-magento",
     "description": "Customisation and Made-to-Order for your business",
-    "license": "proprietary",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": "Open Source License",
+    "keywords": [
+        "magento 2",
+        "bridge",
+        "platforme"
+    ],
     "authors": [
         {
-            "name": "Platforme",
-            "email": "tech@platforme.com"
+            "name": "Daniel Azevedo",
+            "email": "dva@platforme.com",
+            "role": "Developer"
         }
     ],
-    "repositories":
-    {
-      "url": "github.com/3rdvision/ripe-bridge-magento.git", 
-      "type": "git"
-    },
-    "minimum-stability": "dev",
-    "require": {},
     "autoload": {
         "psr-4": {
             "Platforme\\Bridge\\": ""
