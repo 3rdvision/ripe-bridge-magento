@@ -13,3 +13,7 @@ bin/magento module:enable Platforme_Bridge
 bin/magento setup:upgrade
 bin/magento setup:di:compile
 ```
+
+## License
+
+[Apache License 2.0](LICENSE.txt)
