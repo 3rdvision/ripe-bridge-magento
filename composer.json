@@ -9,13 +9,6 @@
         "bridge",
         "platforme"
     ],
-    "authors": [
-        {
-            "name": "Daniel Azevedo",
-            "email": "dva@platforme.com",
-            "role": "Developer"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Platforme\\Bridge\\": ""

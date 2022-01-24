@@ -12,6 +12,8 @@ composer require 3rdvision/ripe-bridge-magento
 bin/magento module:enable Platforme_Bridge
 bin/magento setup:upgrade
 bin/magento setup:di:compile
-bin/magento setup:static-content:deploy
-bin/magento cache:clean
 ```
+
+## License
+
+[Apache License 2.0](LICENSE.txt)
