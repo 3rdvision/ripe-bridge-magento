@@ -1,3 +1,16 @@
 <body>
     <div id="platforme-button-injection"  data-mage-init='{"hello": {"message": "msg"}}'></div>
+    <?php
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');//get current product
+        $product_info_json = json_encode($product->getData());
+        // echo json_encode($product->getCustomOptios());
+        echo json_encode($product->getTypeInstance()->getConfigurableOptions($product));
+        dump(get_class_methods($product))
+        // echo $product_info_json
+    ?>
+    <script>
+        const productInfo = <?php echo $product_info_json ?>;
+        console.log("productInfo:", productInfo);
+    </script>
 </body>
