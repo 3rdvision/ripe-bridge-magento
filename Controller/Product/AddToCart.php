@@ -15,21 +15,30 @@ class AddToCart extends \Magento\Framework\App\Action\Action {
         $this->resultPageFactory = $resultPageFactory;
         $this->cart = $cart;
         $this->productRepository = $productRepository;
+        $this->serializer = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
         parent::__construct($context);
     }
     public function execute()
     {
         try {
+            // get product details from params
             $productId = $this->getRequest()->getParam('id');
-
+            $productParams = $this->getRequest()->getParams();
+            $additionalOptions = [];
+            $additionalOptions[] = array(
+                'label' => "Custom options", //Custom option label
+                'value' => "testyyyyyy", //Custom option value
+            );
             $productDetails = array();
             $productDetails['qty'] = '1';
             $product = $this->productRepository->getById($productId);
 
-            if ($product) {
-                $this->cart->addProduct($product, $productDetails);
-                $this->cart->save();
+            if ($additionalOptions) {
+                $product->addCustomOption('additional_options', $this->serializer->serialize($additionalOptions));
             }
+
+            $this->cart->addProduct($product, $productDetails);
+            $this->cart->save();
 
             $this->messageManager->addSuccessMessage(__('Successfully added product to cart.'));
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
