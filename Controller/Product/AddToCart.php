@@ -15,7 +15,6 @@ class AddToCart extends \Magento\Framework\App\Action\Action {
         $this->resultPageFactory = $resultPageFactory;
         $this->cart = $cart;
         $this->productRepository = $productRepository;
-        $this->serializer = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
         parent::__construct($context);
     }
     public function execute()
@@ -34,7 +33,7 @@ class AddToCart extends \Magento\Framework\App\Action\Action {
             $product = $this->productRepository->getById($productId);
 
             if ($additionalOptions) {
-                $product->addCustomOption('additional_options', $this->serializer->serialize($additionalOptions));
+                $product->addCustomOption('additional_options', json_encode($additionalOptions));
             }
 
             $this->cart->addProduct($product, $productDetails);

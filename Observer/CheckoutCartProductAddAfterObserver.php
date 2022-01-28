@@ -15,7 +15,6 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
      */
     protected $_storeManager;
     protected $_request;
-    protected $_serializer;
     /**
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\View\LayoutInterface $layout
@@ -29,7 +28,6 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
         $this->_layout = $layout;
         $this->_storeManager = $storeManager;
         $this->_request = $request;
-        $this->_serializer = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
     }
     /**
      * Add order information into GA block to render on checkout success pages
@@ -43,7 +41,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
         $item = $observer->getQuoteItem();
         $additionalOptions = array();
         if ($additionalOption = $item->getOptionByCode('additional_options')){
-            $additionalOptions = (array) $this->_serializer->unserialize($additionalOption->getValue());
+            $additionalOptions = (array) json_decode($additionalOption->getValue());
         }
         $post = $this->_request->getParam('cloudways');
         if(is_array($post))
@@ -63,7 +61,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
             {
                 $item->addOption(array(
                     'code' => 'additional_options',
-                    'value' => $this->_serializer->serialize($additionalOptions)
+                    'value' => json_encode($additionalOptions)
                 ));
             }
         }
