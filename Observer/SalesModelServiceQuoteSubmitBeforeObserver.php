@@ -10,6 +10,8 @@ class SalesModelServiceQuoteSubmitBeforeObserver implements ObserverInterface
     private $quoteItems = [];
     private $quote = null;
     private $order = null;
+    private $serializer = null;
+
     /**
      * Add order information into GA block to render on checkout success pages
      *
@@ -20,6 +22,7 @@ class SalesModelServiceQuoteSubmitBeforeObserver implements ObserverInterface
     {
         $this->quote = $observer->getQuote();
         $this->order = $observer->getOrder();
+        $this->serializer = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
         // can not find a equivalent event for sales_convert_quote_item_to_order_item
         /* @var  \Magento\Sales\Model\Order\Item $orderItem */
         foreach($this->order->getItems() as $orderItem)
@@ -44,7 +47,7 @@ class SalesModelServiceQuoteSubmitBeforeObserver implements ObserverInterface
                         if(count($additionalOptions) > 0)
                         {
                             $options = $orderItem->getProductOptions();
-                            $options['additional_options'] = unserialize($additionalOptions->getValue());
+                            $options['additional_options'] = $this->serializer->unserialize($additionalOptions->getValue());
                             $orderItem->setProductOptions($options);
                         }
 

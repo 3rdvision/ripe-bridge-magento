@@ -15,6 +15,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
      */
     protected $_storeManager;
     protected $_request;
+    protected $_serializer;
     /**
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\View\LayoutInterface $layout
@@ -28,6 +29,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
         $this->_layout = $layout;
         $this->_storeManager = $storeManager;
         $this->_request = $request;
+        $this->_serializer = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
     }
     /**
      * Add order information into GA block to render on checkout success pages
@@ -41,7 +43,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
         $item = $observer->getQuoteItem();
         $additionalOptions = array();
         if ($additionalOption = $item->getOptionByCode('additional_options')){
-            $additionalOptions = (array) unserialize($additionalOption->getValue());
+            $additionalOptions = (array) $this->_serializer->unserialize($additionalOption->getValue());
         }
         $post = $this->_request->getParam('cloudways');
         if(is_array($post))
@@ -57,13 +59,13 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
                     'value' => $value
                 ];
             }
-        }
-        if(count($additionalOptions) > 0)
-        {
-            $item->addOption(array(
-                'code' => 'additional_options',
-                'value' => serialize($additionalOptions)
-            ));
+            if(count($additionalOptions) > 0)
+            {
+                $item->addOption(array(
+                    'code' => 'additional_options',
+                    'value' => $this->_serializer->serialize($additionalOptions)
+                ));
+            }
         }
         /* To Do */
         // Edit Cart - May need to remove option and readd them
