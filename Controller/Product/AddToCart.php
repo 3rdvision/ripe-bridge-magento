@@ -23,11 +23,14 @@ class AddToCart extends \Magento\Framework\App\Action\Action {
             // get product details from params
             $productId = $this->getRequest()->getParam('id');
             $productParams = $this->getRequest()->getParams();
-            $additionalOptions = [];
-            $additionalOptions[] = array(
+
+            $additionalOptions = array(array(
                 'label' => "Custom options", //Custom option label
                 'value' => "testyyyyyy", //Custom option value
-            );
+            ),array(
+                'label' => "Custom options2", //Custom option label
+                'value' => "testyyyyyy", //Custom option value
+            ),);
             $productDetails = array();
             $productDetails['qty'] = '1';
             $product = $this->productRepository->getById($productId);
