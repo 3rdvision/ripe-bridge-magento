@@ -3,7 +3,7 @@
     <?php
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');//get current product
-        $this->cart = \Magento\Checkout\Model\Cart::class;
+        // $this->cart = \Magento\Checkout\Model\Cart::class;
         $this->serializer = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
         $additionalOptions = [];
         $additionalOptions[] = array(
@@ -14,10 +14,10 @@
         // echo json_encode($product->getCustomOptios());
         // echo json_encode($product->getTypeInstance()->getConfigurableOptions($product));
         $customOptions = $product->getCustomOptions();
-        dump($customOptions);
-        dump($this->cart);
+        // dump($customOptions);
+        // dump($this->cart);
         $product_info_json = json_encode($product->getData());
-        dump(get_class_methods($product));
+        // dump(get_class_methods($product));
         // echo $product_info_json
     ?>
     <a class="my-custom-button" href="#" onclick="goPlatforme(); return false;">My Custom Button's Label</a>
