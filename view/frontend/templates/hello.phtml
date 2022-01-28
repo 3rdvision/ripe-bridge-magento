@@ -4,16 +4,16 @@
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');//get current product
         // $this->cart = \Magento\Checkout\Model\Cart::class;
-        $this->serializer = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
-        $additionalOptions = [];
-        $additionalOptions[] = array(
-            'label' => "Release Dateeeee", //Custom option label
-            'value' => $product->getReleaseDate(), //Custom option value
-        );
-        $product->addCustomOption('additional_options', $this->serializer->serialize($additionalOptions));
+        // $this->serializer = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
+        // $additionalOptions = [];
+        // $additionalOptions[] = array(
+        //     'label' => "Release Dateeeee", //Custom option label
+        //     'value' => $product->getReleaseDate(), //Custom option value
+        // );
+        // $product->addCustomOption('additional_options', $this->serializer->serialize($additionalOptions));
         // echo json_encode($product->getCustomOptios());
         // echo json_encode($product->getTypeInstance()->getConfigurableOptions($product));
-        $customOptions = $product->getCustomOptions();
+        // $customOptions = $product->getCustomOptions();
         // dump($customOptions);
         // dump($this->cart);
         $product_info_json = json_encode($product->getData());
