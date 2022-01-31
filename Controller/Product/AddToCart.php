@@ -1,7 +1,9 @@
 <?php
+
 namespace Platforme\Bridge\Controller\Product;
- 
-class AddToCart extends \Magento\Framework\App\Action\Action {
+
+class AddToCart extends \Magento\Framework\App\Action\Action
+{
 
     protected $cart;
     protected $productRepository;
@@ -27,7 +29,7 @@ class AddToCart extends \Magento\Framework\App\Action\Action {
             $additionalOptions = array(array(
                 'label' => "Custom options", //Custom option label
                 'value' => "testyyyyyy", //Custom option value
-            ),array(
+            ), array(
                 'label' => "Custom options2", //Custom option label
                 'value' => "testyyyyyy", //Custom option value
             ),);
