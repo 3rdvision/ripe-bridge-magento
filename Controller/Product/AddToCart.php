@@ -12,15 +12,16 @@ class AddToCart extends \Magento\Framework\App\Action\Action
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \Magento\Catalog\Model\ProductRepository $productRepository,
-        \Magento\Checkout\Model\Cart $cart
+        \Magento\Checkout\Model\Cart $cart,
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->cart = $cart;
         $this->productRepository = $productRepository;
+        $this->logger = $logger;
         parent::__construct($context);
     }
-    public function execute()
-    {
+    public function execute() {
         try {
             // get product details from params
             $productId = $this->getRequest()->getParam('id');
@@ -33,6 +34,13 @@ class AddToCart extends \Magento\Framework\App\Action\Action
                 'label' => "Custom options2", //Custom option label
                 'value' => "testyyyyyy", //Custom option value
             ),);
+
+            foreach ($productParams as $key => $value) {
+                $additionalOptions[] = array(
+                    'label' => $key,
+                    'value' => $value
+                );
+            }
             $productDetails = array();
             $productDetails['qty'] = '1';
             $product = $this->productRepository->getById($productId);

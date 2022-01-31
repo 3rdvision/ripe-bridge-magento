@@ -20,10 +20,9 @@
         // dump(get_class_methods($product));
         // echo $product_info_json
     ?>
-    <a class="my-custom-button" href="#" onclick="goPlatforme(); return false;">My Custom Button's Label</a>
+    <a class="my-custom-button" href="#" onclick="goPlatforme(productInfo); return false;">My Custom Button's Label</a>
     <script>
         const productInfo = <?php echo $product_info_json ?>;
-        
         console.log("productInfo:", productInfo);
     </script>
 </body>

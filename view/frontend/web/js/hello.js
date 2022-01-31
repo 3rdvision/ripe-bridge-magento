@@ -214,7 +214,6 @@ define([
         const query = info.query;
         currency = currency || cart.currency.toLowerCase();
         locale = locale || (await getContentLanguage(true));
-        const storefrontDigest = getCookieValue("storefront_digest");
 
         // validates that some of the mandatory values are available
         // throwing errors otherwise (ensures guarantees)
@@ -228,20 +227,14 @@ define([
         // sets the multiple GET parameters that are going to be used
         // to pass the required Shopify information to RIPE White
         urlParams.set("store", store);
-        urlParams.set("shopify_product_title", title);
+        urlParams.set("product_title", title);
         if (setCurrency && currency) urlParams.set("currency", currency);
         if (setCountry && country) urlParams.set("country", country);
         if (setLocale && locale) urlParams.set("locale", locale);
 
         // in case a product is explicitly set adds extra product ID
         // information to the GET parameters
-        if (product) urlParams.set("shopify_product_id", product.entity_id);
-
-        // sets the "optional" storefront digest value in case it exists
-        // (for logged in users) otherwise ignores it
-        if (storefrontDigest) {
-            urlParams.set("shopify_storefront_digest", storefrontDigest);
-        }
+        if (product) urlParams.set("product_id", product.entity_id);
 
         if (redirect) window.location = url.toString();
 
@@ -345,7 +338,7 @@ define([
             {},
             product,
             {
-                query: "brand=dummy&model=dummy"
+                query: product.ripe_customization_query || "brand=dummy&model=dummy"
             },
             {
                 redirect: true, // If redirection of the user agent should be performed
