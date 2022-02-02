@@ -25,10 +25,15 @@ class AddToCart extends \Magento\Framework\App\Action\Action
         try {
             $productParams = $this->getRequest()->getParams();
 
-            $additionalOptions = array();
+            $visibleOptions = array();
+            $customOptions = array(array(
+                "label" => "image",
+                "value" => "https://placekitten.com/500/500"
+            ));
+
             $productDetailsParams = array_diff_key($productParams, array_flip(["id"]));
             foreach ($productDetailsParams as $key => $value) {
-                $additionalOptions[] = array(
+                $visibleOptions[] = array(
                     "label" => $key,
                     "value" => $value
                 );
@@ -38,8 +43,9 @@ class AddToCart extends \Magento\Framework\App\Action\Action
 
             $product = $this->productRepository->getById($productParams["id"]);
 
-            if ($additionalOptions) {
-                $product->addCustomOption("additional_options", json_encode($additionalOptions));
+            if ($visibleOptions) {
+                $product->addCustomOption("additional_options", json_encode($visibleOptions));
+                $product->addCustomOption("other_options", json_encode($customOptions));
             }
 
             $this->cart->addProduct($product, $productDetails);
