@@ -23,44 +23,37 @@ class AddToCart extends \Magento\Framework\App\Action\Action
     }
     public function execute() {
         try {
-            // get product details from params
-            $productId = $this->getRequest()->getParam('id');
             $productParams = $this->getRequest()->getParams();
 
-            $additionalOptions = array(array(
-                'label' => "Custom options", //Custom option label
-                'value' => "testyyyyyy", //Custom option value
-            ), array(
-                'label' => "Custom options2", //Custom option label
-                'value' => "testyyyyyy", //Custom option value
-            ),);
-
-            foreach ($productParams as $key => $value) {
+            $additionalOptions = array();
+            $productDetailsParams = array_diff_key($productParams, array_flip(["id"]));
+            foreach ($productDetailsParams as $key => $value) {
                 $additionalOptions[] = array(
-                    'label' => $key,
-                    'value' => $value
+                    "label" => $key,
+                    "value" => $value
                 );
             }
             $productDetails = array();
-            $productDetails['qty'] = '1';
-            $product = $this->productRepository->getById($productId);
+            $productDetails["qty"] = "1";
+
+            $product = $this->productRepository->getById($productParams["id"]);
 
             if ($additionalOptions) {
-                $product->addCustomOption('additional_options', json_encode($additionalOptions));
+                $product->addCustomOption("additional_options", json_encode($additionalOptions));
             }
 
             $this->cart->addProduct($product, $productDetails);
             $this->cart->save();
 
-            $this->messageManager->addSuccessMessage(__('Successfully added product to cart.'));
+            $this->messageManager->addSuccessMessage(__("Successfully added product to cart."));
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->messageManager->addExceptionMessage(
                 $e,
-                __('%1', $e->getMessage())
+                __("%1", $e->getMessage())
             );
         } catch (\Exception $e) {
-            $this->messageManager->addExceptionMessage($e, __('error.'));
+            $this->messageManager->addExceptionMessage($e, __("error."));
         }
-        $this->getResponse()->setRedirect('/checkout/cart/index');
+        $this->getResponse()->setRedirect("/checkout/cart/index");
     }
 }
