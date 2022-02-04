@@ -51,6 +51,7 @@ class SalesModelServiceQuoteSubmitBeforeObserver implements ObserverInterface
                         $this->logger->info("hereeeee");
                         $type=gettype($additionalOptions);
                         $this->logger->info("ok".$type);
+                        
                         // $testy = array($additionalOptions)
                         // $this->logger->info(gettype($testy));
                         // if(count($additionalOptions) > 0)

@@ -24,5 +24,12 @@
     <script>
         const productInfo = <?php echo $product_info_json ?>;
         console.log("productInfo:", productInfo);
+        const platformeScriptReady = setInterval(()=> {
+            if(!window.addPlatformeButton) return;
+
+            clearInterval(platformeScriptReady);
+            console.log("ready window.addPlatformeButton", window.addPlatformeButton);
+            // window.addPlatformeButton();
+        }, 100)
     </script>
 </body>

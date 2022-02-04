@@ -26,12 +26,16 @@ class AddToCart extends \Magento\Framework\App\Action\Action
             $productParams = $this->getRequest()->getParams();
 
             $visibleOptions = array();
-            $customOptions = array(array(
+            $customImageOption = array(
                 "label" => "image",
-                "value" => "https://placekitten.com/500/500"
-            ));
+                "value" => $productParams["image"] ?? null
+            );
+            $customPriceOption = array(
+                "label" => "price",
+                "value" => $productParams["price"] ?? null
+            );
 
-            $productDetailsParams = array_diff_key($productParams, array_flip(["id"]));
+            $productDetailsParams = array_diff_key($productParams, array_flip(["id", "image", "price"]));
             foreach ($productDetailsParams as $key => $value) {
                 $visibleOptions[] = array(
                     "label" => $key,
@@ -42,10 +46,15 @@ class AddToCart extends \Magento\Framework\App\Action\Action
             $productDetails["qty"] = "1";
 
             $product = $this->productRepository->getById($productParams["id"]);
+            // $product->setPrice(6969);
+            // $product->setBasePrice(6969);
+            
+            // $product->save();
 
             if ($visibleOptions) {
                 $product->addCustomOption("additional_options", json_encode($visibleOptions));
-                $product->addCustomOption("other_options", json_encode($customOptions));
+                $product->addCustomOption("ripe_image", json_encode($customImageOption));
+                $product->addCustomOption("ripe_price", json_encode($customPriceOption));
             }
 
             $this->cart->addProduct($product, $productDetails);
@@ -58,7 +67,7 @@ class AddToCart extends \Magento\Framework\App\Action\Action
                 __("%1", $e->getMessage())
             );
         } catch (\Exception $e) {
-            $this->messageManager->addExceptionMessage($e, __("error."));
+            $this->messageManager->addExceptionMessage($e, __("Error when adding product to cart."));
         }
         $this->getResponse()->setRedirect("/checkout/cart/index");
     }

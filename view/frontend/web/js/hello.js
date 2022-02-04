@@ -272,7 +272,8 @@ define([
             productMetafields && productMetafields.info ? JSON.parse(productMetafields.info) : {};
         active =
             active === null ? info.active && (!info.buildType || info.buildType === "build") : active;
-        if (!active) return;
+        // if (!active) return;
+        // DEBUG /\ improve here
 
         // in case there's no previous value defined, fallbacks
         // to the current location so that the user is able to
@@ -343,9 +344,8 @@ define([
             {
                 redirect: true, // If redirection of the user agent should be performed
                 setLocale: true, // If the locale should be automatically set in GET parameters
-                currency: "eur", // If set the currency parameter is explicitly set in GET parameters
+                currency: "usd", // If set the currency parameter is explicitly set in GET parameters
                 country: "pt", // If set the country parameter is explicitly set in GET parameters
-                cartVariantId: 32806301007918 // The ID of a product variant in the store
             }
         );
     }
@@ -354,6 +354,7 @@ define([
     // be used by the React App, since we cant export
     // them due to the fact that this script is not
     // imported as a Javascript module in the storefront
+    window.addPlatformeButton = addPlatformeButton;
     window.generateButtonComponent = generateButtonComponent;
     window.goPlatforme = goPlatforme;
  });

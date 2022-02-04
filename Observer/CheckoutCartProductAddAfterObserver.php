@@ -23,8 +23,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\View\LayoutInterface $layout,
         \Magento\Framework\App\RequestInterface $request
-    )
-    {
+    ) {
         $this->_layout = $layout;
         $this->_storeManager = $storeManager;
         $this->_request = $request;
@@ -35,36 +34,41 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
      * @param EventObserver $observer
      * @return void
      */
-    public function execute(EventObserver $observer)
-    {
+    public function execute(EventObserver $observer) {
         /* @var \Magento\Quote\Model\Quote\Item $item */
         $item = $observer->getQuoteItem();
         $additionalOptions = array();
-        if ($additionalOption = $item->getOptionByCode('additional_options')){
+
+        if ($additionalOption = $item->getOptionByCode('additional_options')) {
             $additionalOptions = (array) json_decode($additionalOption->getValue());
         }
-        $post = $this->_request->getParam('cloudways');
-        if(is_array($post))
-        {
-            foreach($post as $key => $value)
-            {
-                if($key == '' || $value == '')
-                {
-                    continue;
-                }
-                $additionalOptions[] = [
-                    'label' => $key,
-                    'value' => $value
-                ];
-            }
-            if(count($additionalOptions) > 0)
-            {
-                $item->addOption(array(
-                    'code' => 'additional_options',
-                    'value' => json_encode($additionalOptions)
-                ));
-            }
+        // $post = $this->_request->getParam('cloudways');
+        // if(is_array($post)) {
+        //     foreach($post as $key => $value) {
+        //         if($key == '' || $value == '') {
+        //             continue;
+        //         }
+        //         $additionalOptions[] = [
+        //             'label' => $key,
+        //             'value' => $value
+        //         ];
+        //     }
+        //     if(count($additionalOptions) > 0) {
+        //         $item->addOption(array(
+        //             'code' => 'additional_options',
+        //             'value' => json_encode($additionalOptions)
+        //         ));
+        //     }
+        // }
+
+        $customPriceOption = array();
+        if ($customPriceOption = $item->getOptionByCode('ripe_price')){
+            $customPriceOption = (array) json_decode($customPriceOption->getValue());
+            $item->setCustomPrice($customPriceOption["value"]);
+            $item->setOriginalCustomPrice($customPriceOption["value"]);
+            $item->getProduct()->setIsSuperMode(true);
         }
+
         /* To Do */
         // Edit Cart - May need to remove option and readd them
         // Pre-fill remarks on product edit pages
