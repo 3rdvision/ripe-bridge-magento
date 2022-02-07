@@ -2,7 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="product.info.main">
-            <block class="Magento\Framework\View\Element\Template" name="product.info.platforme"  after="product.info.price" template="Platforme_Bridge::hello.phtml" />
+            <block class="Magento\Framework\View\Element\Template" name="product.info.platforme"  after="product.info.price" template="Platforme_Bridge::button.phtml" />
         </referenceContainer>
     </body>
 </page>

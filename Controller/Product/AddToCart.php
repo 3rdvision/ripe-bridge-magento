@@ -2,8 +2,7 @@
 
 namespace Platforme\Bridge\Controller\Product;
 
-class AddToCart extends \Magento\Framework\App\Action\Action
-{
+class AddToCart extends \Magento\Framework\App\Action\Action {
 
     protected $cart;
     protected $productRepository;
@@ -25,7 +24,7 @@ class AddToCart extends \Magento\Framework\App\Action\Action
         try {
             $productParams = $this->getRequest()->getParams();
 
-            $visibleOptions = array();
+            $visibleRipeOptions = array();
             $customImageOption = array(
                 "label" => "image",
                 "value" => $productParams["image"] ?? null
@@ -37,22 +36,17 @@ class AddToCart extends \Magento\Framework\App\Action\Action
 
             $productDetailsParams = array_diff_key($productParams, array_flip(["id", "image", "price"]));
             foreach ($productDetailsParams as $key => $value) {
-                $visibleOptions[] = array(
+                $visibleRipeOptions[] = array(
                     "label" => $key,
                     "value" => $value
                 );
             }
             $productDetails = array();
             $productDetails["qty"] = "1";
-
             $product = $this->productRepository->getById($productParams["id"]);
-            // $product->setPrice(6969);
-            // $product->setBasePrice(6969);
-            
-            // $product->save();
 
-            if ($visibleOptions) {
-                $product->addCustomOption("additional_options", json_encode($visibleOptions));
+            if ($visibleRipeOptions) {
+                $product->addCustomOption("additional_options", json_encode($visibleRipeOptions));
                 $product->addCustomOption("ripe_image", json_encode($customImageOption));
                 $product->addCustomOption("ripe_price", json_encode($customPriceOption));
             }

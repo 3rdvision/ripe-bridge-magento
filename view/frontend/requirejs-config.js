@@ -1,7 +1,7 @@
 var config = {
     map: {
         "*": {
-            hello: "Platforme_Bridge/js/hello"
+            button: "Platforme_Bridge/js/button"
         }
     }
 };

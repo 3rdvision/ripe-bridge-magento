@@ -1,8 +1,4 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 
 namespace Platforme\Bridge\Setup;
 
@@ -16,8 +12,7 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 /**
 * @codeCoverageIgnore
 */
-class InstallData implements InstallDataInterface
-{
+class InstallData implements InstallDataInterface {
     /**
      * Eav setup factory
      * @var EavSetupFactory
@@ -28,8 +23,7 @@ class InstallData implements InstallDataInterface
      * Init
      * @param EavSetupFactory $eavSetupFactory
      */
-    public function __construct(EavSetupFactory $eavSetupFactory)
-    {
+    public function __construct(EavSetupFactory $eavSetupFactory) {
         $this->eavSetupFactory = $eavSetupFactory;
     }
 
@@ -39,8 +33,7 @@ class InstallData implements InstallDataInterface
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
-    {
+    public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context) {
         $eavSetup = $this->eavSetupFactory->create();
         $eavSetup->addAttribute(
             Product::ENTITY,
@@ -51,7 +44,6 @@ class InstallData implements InstallDataInterface
                 'label' => 'RIPE Customization Query',
                 'input' => 'text',
                 'frontend' => 'Platforme\Bridge\Model\Attribute\Frontend\Query',
-                'backend' => 'Platforme\Bridge\Model\Attribute\Backend\Query',
                 'required' => false,
                 'sort_order' => 50,
                 'global' => ScopedAttributeInterface::SCOPE_GLOBAL,
@@ -61,6 +53,24 @@ class InstallData implements InstallDataInterface
                 'visible' => true,
                 'is_html_allowed_on_front' => true,
                 'visible_on_front' => false
+            ]
+        );
+        $eavSetup->addAttribute(
+            Product::ENTITY,
+            'ripe_customization_active',
+            [
+                'group' => 'General',
+                'type' => 'int',
+                'label' => 'RIPE Customization Active',
+                'input' => 'boolean',
+                'required' => false,
+                'default' => '1',
+                'sort_order' => 50,
+                'global' => ScopedAttributeInterface::SCOPE_GLOBAL,
+                'is_used_in_grid' => false,
+                'is_visible_in_grid' => false,
+                'is_filterable_in_grid' => false,
+                'visible' => true
             ]
         );
     }

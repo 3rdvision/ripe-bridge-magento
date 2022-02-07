@@ -1,0 +1,20 @@
+<body>
+    <div id="platforme-button-injection"  data-mage-init='{"button": {}}'></div>
+    <?php
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');
+        $product_info_json = json_encode($product->getData());
+    ?>
+    <a class="my-custom-button" href="#" onclick="goPlatforme(productInfo); return false;">My Custom Button's Label</a>
+    <script>
+        const productInfo = <?php echo $product_info_json ?>;
+        console.log("productInfo:", productInfo);
+        const platformeScriptReady = setInterval(()=> {
+            if(!window.addPlatformeButton) return;
+
+            clearInterval(platformeScriptReady);
+            console.log("ready window.addPlatformeButton", window.addPlatformeButton);
+            // window.addPlatformeButton();
+        }, 100)
+    </script>
+</body>
