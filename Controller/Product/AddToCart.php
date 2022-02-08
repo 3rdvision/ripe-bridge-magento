@@ -20,6 +20,7 @@ class AddToCart extends \Magento\Framework\App\Action\Action {
         $this->logger = $logger;
         parent::__construct($context);
     }
+
     public function execute() {
         try {
             $productParams = $this->getRequest()->getParams();
@@ -63,6 +64,7 @@ class AddToCart extends \Magento\Framework\App\Action\Action {
         } catch (\Exception $e) {
             $this->messageManager->addExceptionMessage($e, __("Error when adding product to cart."));
         }
+
         $this->getResponse()->setRedirect("/checkout/cart/index");
     }
 }

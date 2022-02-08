@@ -8,7 +8,6 @@ class Image {
             $imageUrl = json_decode($ripeImageOption->getValue())->value;
             $result->setImageUrl($imageUrl);
         }
-
         return $result;
     }
 }

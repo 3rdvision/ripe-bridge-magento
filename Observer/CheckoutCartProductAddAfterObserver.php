@@ -4,8 +4,7 @@ namespace Platforme\Bridge\Observer;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 
-class CheckoutCartProductAddAfterObserver implements ObserverInterface
-{
+class CheckoutCartProductAddAfterObserver implements ObserverInterface {
     /**
      * @var \Magento\Framework\View\LayoutInterface
      */
@@ -19,7 +18,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\View\LayoutInterface $layout
      */
-    public function __construct(
+    public function __construct (
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\View\LayoutInterface $layout,
         \Magento\Framework\App\RequestInterface $request
