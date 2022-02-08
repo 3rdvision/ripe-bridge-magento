@@ -44,6 +44,13 @@ class SalesModelServiceQuoteSubmitBeforeObserver implements ObserverInterface {
         }
     }
 
+
+    /**
+     * Add order information into GA block to render on checkout success pages
+     *
+     * @param string $id
+     * @return null
+     */
     private function getQuoteItemById($id) {
         if(empty($this->quoteItems)) {
             foreach($this->quote->getItems() as $item) {

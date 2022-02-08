@@ -28,7 +28,7 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface {
         $this->_request = $request;
     }
     /**
-     * Add order information into GA block to render on checkout success pages
+     * Sets item custom price in case it has a custom ripe price option
      *
      * @param EventObserver $observer
      * @return void
@@ -41,10 +41,5 @@ class CheckoutCartProductAddAfterObserver implements ObserverInterface {
             $item->setOriginalCustomPrice($customPriceOption["value"]);
             $item->getProduct()->setIsSuperMode(true);
         }
-
-        /* To Do */
-        // Edit Cart - May need to remove option and readd them
-        // Pre-fill remarks on product edit pages
-        // Check for comparability with custom option
     }
 }
