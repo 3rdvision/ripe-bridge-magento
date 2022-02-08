@@ -43,7 +43,6 @@ class InstallData implements InstallDataInterface {
                 'type' => 'varchar',
                 'label' => 'RIPE Customization Query',
                 'input' => 'text',
-                'frontend' => 'Platforme\Bridge\Model\Attribute\Frontend\Query',
                 'required' => false,
                 'sort_order' => 50,
                 'global' => ScopedAttributeInterface::SCOPE_GLOBAL,

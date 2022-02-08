@@ -1,7 +1,5 @@
-define([
-    "jquery"
- ], function($) {
-    const BASE_URL = "http://localhost:8080";
+define(["jquery"], ($) => {
+    const BASE_URL = "http://localhost:8080"; // TODO get from config
 
     /**
      * Handles the provided error according to the default strategy,
@@ -19,11 +17,11 @@ define([
         return document.getElementById(elementId);
     }
 
-    function setupButton(store, cart, product, info, options) {
+    function setupButton(product, store, options) {
         const button = getButton();
         button.onclick = async function() {
             try {
-                await redirectToCustomization(store, cart, product, info, options);
+                await redirectToCustomization(product, store, options);
             } catch (err) {
                 handleError(err);
             }
@@ -47,59 +45,6 @@ define([
         let contentLanguage = window.navigator.languages[0];
         if (normalized) contentLanguage = contentLanguage.replace(/-/g, "_");
         return contentLanguage;
-    }
-
-    /**
-     * Retrieves the value of a locally stored cookie by its name.
-     *
-     * Notice that the `HttpOnly` cookies are not "visible" to Javascript
-     * and as such it's not possible to obtain their value.
-     *
-     * @param {String} name The name of the cookie to obtain the value.
-     * @returns {String} The string based value of the requested cookie.
-     */
-    function getCookieValue(name) {
-        const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-        return match ? match[2] : null;
-    }
-
-    async function getStoreCustomizationInfo(baseUrl, storeUrl) {
-        const response = await fetch(`${baseUrl}/api/stores/customization?store_url=${storeUrl}`);
-        if (response.status !== 200) {
-            throw new Error("No store information could be found");
-        }
-        const store = await response.json();
-        return store;
-    }
-
-    /**
-     * Ensures there is a cart by adding a product to cart with
-     * '0' quantity. This operation changes nothing from the user's
-     * perspective, as the product is not effectively added to cart,
-     * but forces Shopify to set the cookie with the cart token.
-     *
-     * @param {String} productId An ID of a valid product that could
-     * be added to the cart.
-     * @throws {Error} Throws an error if the addition to cart fails.
-     */
-    async function ensureCart(productId) {
-        const response = await fetch("/cart/add.js", {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify({
-                items: [
-                    {
-                        quantity: 0,
-                        id: productId
-                    }
-                ]
-            })
-        });
-        if (response.status !== 200) {
-            throw new Error("Could not create cart");
-        }
     }
 
     const ICON_1_SVG =
@@ -171,10 +116,8 @@ define([
      *
      * @param {String} store The domain of the store currently in use and that
      * is going in the redirection URL parameters.
-     * @param {Object} cart Object that references the Shopify cart, that will
-     * be used for some local inference.
-     * @param {Object} product Object containing the Shopify version of the
-     * product, to be used in Shopify specific URL parameters.
+     * @param {Object} product Object containing the Magento version of the
+     * product.
      * @param {Object} info The info object that contains multiple information
      * about the product currently in page visualization.
      * @param {Object} options Set of options that control the behavior of this
@@ -182,10 +125,8 @@ define([
      * @returns {URL} The generate URL for the redirection process.
      */
     async function redirectToCustomization(
-        store,
-        cart,
         product,
-        info,
+        store,
         {
             baseUrl = BASE_URL,
             redirect = true,
@@ -193,26 +134,18 @@ define([
             setCountry = true,
             setLocale = true,
             productTitle = null,
-            cartVariantId = null,
             currency = null,
             country = null,
-            locale = null,
-            variantId = null
+            locale = null
         } = {}
     ) {
-        // gathers the cart variant ID either from the provided options or tries
-        // to obtain it from the selected product variant and then makes sure that
-        // a cart already exists using that variant ID to add a product with zero
-        // quantity (this is an API hack to test cart existence)
-
-        // cartVariantId = cartVariantId || (product ? product.variants[0].id : null);
-        // await ensureCart(cartVariantId);
-
         // obtains the base query value from the product information map and obtains
         // the content language, store front digest and cart token, these values are
         // going to be sent in the redirection process
-        const query = info.query;
-        currency = currency || cart.currency.toLowerCase();
+        const query = product.ripe_customization_query;
+        currency = currency || "eur"; // TODO get from store config
+        country = country || "pt"; // TODO get from store config
+
         locale = locale || (await getContentLanguage(true));
 
         // validates that some of the mandatory values are available
@@ -222,19 +155,21 @@ define([
         const enterUrl = baseUrl + "/config/enter";
         const url = new URL(enterUrl + "?" + query);
         const urlParams = url.searchParams;
-        const title = productTitle || (product ? product.title : null);
+        const title = productTitle || (product ? product.name : null);
+        const productId = (product ? product.entity_id : null);
 
         // sets the multiple GET parameters that are going to be used
-        // to pass the required Shopify information to RIPE White
+        // to pass the required Magento information to RIPE White
         urlParams.set("store", store);
         urlParams.set("product_title", title);
         if (setCurrency && currency) urlParams.set("currency", currency);
         if (setCountry && country) urlParams.set("country", country);
         if (setLocale && locale) urlParams.set("locale", locale);
+        debugger;
 
         // in case a product is explicitly set adds extra product ID
         // information to the GET parameters
-        if (product) urlParams.set("product_id", product.entity_id);
+        if (product) urlParams.set("product_id", productId);
 
         if (redirect) window.location = url.toString();
 
@@ -242,15 +177,8 @@ define([
     }
 
     // eslint-disable-next-line no-unused-vars
-    async function addPlatformeButton(
-        store,
-        cart,
-        product,
-        productMetafields,
-        baseUrl,
+    function addPlatformeButton(product,
         {
-            label = "CUSTOMIZE THIS PRODUCT",
-            active = null,
             productTitle = null,
             cartVariantId = null,
             setCurrency = true,
@@ -264,26 +192,25 @@ define([
     ) {
         // coerces the base URL to the static one in case none is provided
         // this parameter allows dynamic usage of multiple RIPE Bridge envs
-        baseUrl = baseUrl || BASE_URL;
+        const baseUrl = BASE_URL;
 
+        // gets store base URL
+        const store = window.location.host; // TODO get from store config   
+    
         // determines if the customizable product (build supported) is set as
         // `active` and if not ignores the request to add the Platforme button HTML
-        const info =
-            productMetafields && productMetafields.info ? JSON.parse(productMetafields.info) : {};
-        active =
-            active === null ? info.active && (!info.buildType || info.buildType === "build") : active;
-        // if (!active) return;
-        // DEBUG /\ improve here
-
+        active = parseInt(product.ripe_customization_active);
+        if (!active) return;
+    
         // in case there's no previous value defined, fallbacks
         // to the current location so that the user is able to
         // return back to the current page if desired
-        const urlParams = new URLSearchParams(info.query);
+        const urlParams = new URLSearchParams(product.ripe_customization_query);
         if (!urlParams.has("previous")) {
             urlParams.set("previous", window.location.href);
-            info.query = urlParams.toString();
+            product.ripe_customization_query = urlParams.toString();
         }
-
+    
         const injectionPoint = document.getElementById("platforme-button-injection");
         if (!injectionPoint) {
             console.error(
@@ -291,19 +218,31 @@ define([
             );
             return;
         }
-
-        const storeInfo = await getStoreCustomizationInfo(baseUrl, store);
-
+    
         // "injects" the button's HTML into the target DOM element
         // as requested by the logic
-        // eslint-disable-next-line no-undef
-        injectionPoint.innerHTML = generateButtonComponent(storeInfo, label);
+        const storeConfig = { // TODO get from store config 
+            enabled: true,
+            description: null,
+            meta: {},
+            button_background_color: "#000000",
+            button_orientation: "horizontal",
+            button_icon: "icon_1",
+            button_icon_position: "right",
+            button_font: "",
+            button_css: "",
+            button_text_color: "#ffffff",
+            button_primary_text: "Customize your product",
+            button_secondary_text: ""
+        };
 
+        injectionPoint.innerHTML = generateButtonComponent(storeConfig);
+    
         document.addEventListener("change", function() {
             const queryUrl = new URL(document.URL);
             const variantId = queryUrl.searchParams.get("variant");
-
-            setupButton(store, cart, product, info, {
+    
+            setupButton(product, store, {
                 baseUrl: baseUrl,
                 redirect: true,
                 productTitle: productTitle,
@@ -317,8 +256,8 @@ define([
                 variantId: variantId
             });
         });
-
-        setupButton(store, cart, product, info, {
+        
+        setupButton(product, store, {
             baseUrl: baseUrl,
             redirect: true,
             productTitle: productTitle,
@@ -335,12 +274,8 @@ define([
 
     function goPlatforme(product) {
         redirectToCustomization(
-            window.location.host,
-            {},
             product,
-            {
-                query: product.ripe_customization_query || "brand=dummy&model=dummy"
-            },
+            window.location.host,
             {
                 redirect: true, // If redirection of the user agent should be performed
                 setLocale: true, // If the locale should be automatically set in GET parameters
@@ -350,11 +285,5 @@ define([
         );
     }
 
-    // saves the function in window so that they can
-    // be used by the React App, since we cant export
-    // them due to the fact that this script is not
-    // imported as a Javascript module in the storefront
-    window.addPlatformeButton = addPlatformeButton;
-    window.generateButtonComponent = generateButtonComponent;
-    window.goPlatforme = goPlatforme;
- });
+    addPlatformeButton(productData);
+});
