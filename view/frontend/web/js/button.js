@@ -165,7 +165,6 @@ define(["jquery"], ($) => {
         if (setCurrency && currency) urlParams.set("currency", currency);
         if (setCountry && country) urlParams.set("country", country);
         if (setLocale && locale) urlParams.set("locale", locale);
-        debugger;
 
         // in case a product is explicitly set adds extra product ID
         // information to the GET parameters
