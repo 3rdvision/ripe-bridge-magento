@@ -272,18 +272,5 @@ define(["jquery"], ($) => {
         });
     }
 
-    function goPlatforme(product) {
-        redirectToCustomization(
-            product,
-            window.location.host,
-            {
-                redirect: true, // If redirection of the user agent should be performed
-                setLocale: true, // If the locale should be automatically set in GET parameters
-                currency: "usd", // If set the currency parameter is explicitly set in GET parameters
-                country: "pt", // If set the country parameter is explicitly set in GET parameters
-            }
-        );
-    }
-
     addPlatformeButton(productData);
 });
