@@ -24,35 +24,34 @@ class AddToCart extends \Magento\Framework\App\Action\Action {
     public function execute() {
         try {
             $productParams = $this->getRequest()->getParams();
+            $productDetailsParams = array_diff_key($productParams, array_flip(["id", "image", "price"]));
 
             $visibleRipeOptions = array();
-            $customImageOption = array(
-                "label" => "image",
-                "value" => $productParams["image"] ?? null
-            );
-            $customPriceOption = array(
-                "label" => "price",
-                "value" => $productParams["price"] ?? null
-            );
-
-            $productDetailsParams = array_diff_key($productParams, array_flip(["id", "image", "price"]));
             foreach ($productDetailsParams as $key => $value) {
                 $visibleRipeOptions[] = array(
                     "label" => $key,
                     "value" => $value
                 );
             }
-            $productDetails = array();
-            $productDetails["qty"] = "1";
             $product = $this->productRepository->getById($productParams["id"]);
 
             if ($visibleRipeOptions) {
                 $product->addCustomOption("additional_options", json_encode($visibleRipeOptions));
-                $product->addCustomOption("ripe_image", json_encode($customImageOption));
-                $product->addCustomOption("ripe_price", json_encode($customPriceOption));
+            }
+            if(isset($productParams["image"]) && $productParams["image"]!="None") {
+                $product->addCustomOption("ripe_image", json_encode(array(
+                    "label" => "image",
+                    "value" => $productParams["image"]
+                )));
+            }
+            if(isset($productParams["price"]) && $productParams["price"]!="None") {
+                $product->addCustomOption("ripe_price", json_encode(array(
+                    "label" => "price",
+                    "value" => $productParams["price"]
+                )));
             }
 
-            $this->cart->addProduct($product, $productDetails);
+            $this->cart->addProduct($product, 1);
             $this->cart->save();
 
             $this->messageManager->addSuccessMessage(__("Successfully added product to cart."));
