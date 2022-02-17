@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="store" translate="label" sortOrder="110">
+            <label>Bridge2</label>
+        </tab>
+        <section id="store" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Store</label>
+            <tab>store</tab>
+            <resource>Platforme_Bridge::store</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <comment>Store settings related with Platforme internals.</comment>
+                <label>Store</label>
+                <attribute type="expanded">1</attribute>
+                <field id="name" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Name</label>
+                    <!-- <frontend_model>Magefan\Faq\Block\Adminhtml\System\Config\Disable</frontend_model>
+                    <backend_model>Magefan\Faq\Model\Config\StoreName</backend_model> -->
+                </field>
+                <field id="config_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Config URL</label>
+                </field>
+                <field id="return_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Return URL</label>
+                </field>
+                <field id="enabled" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled Test</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
