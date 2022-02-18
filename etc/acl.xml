@@ -4,8 +4,9 @@
         <resources>
             <resource id="Magento_Backend::admin">
                 <resource id="Magento_Backend::content">
-                    <resource id="Magefan_Faq::store" title="FAQ" sortOrder="10">
-                        <resource id="Magefan_Faq::general" title="FAQ" sortOrder="10" />
+                    <resource id="Platforme_Bridge::bridge" title="Bridge">
+                        <resource id="Platforme_Bridge::store" title="Store" />
+                        <resource id="Platforme_Bridge::development" title="development" />
                     </resource>
                 </resource>
             </resource>

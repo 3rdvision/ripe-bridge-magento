@@ -1,18 +1,30 @@
 <?xml version="1.0"?>
-<!--
-/**
- * Copyright © 2017 Magefan (support@magefan.com). All rights reserved.
- * See LICENSE.txt for license details (http://opensource.org/licenses/osl-3.0.php).
- *
- * Glory to Ukraine! Glory to the heroes!
- */
--->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <store>
+        <bridge>
+            <store>
+                <config_url>http://ripe-core-sbx.platforme.com</config_url>
+                <return_url>platforme/product/addToCart</return_url>
+                <replace_images>1</replace_images>
+                <order_import_topic>pending</order_import_topic>
+                <order_import_state>created</order_import_state>
+            </store>
+            <customize_button>
+                <button_background_color>#000000</button_background_color>
+                <button_orientation>horizontal</button_orientation>
+                <button_icon>icon_1</button_icon>
+                <button_icon_position>left</button_icon_position>
+                <button_font></button_font>
+                <button_css></button_css>
+                <button_text_color>#ffffff</button_text_color>
+                <button_primary_text>Customize</button_primary_text>
+                <button_secondary_text></button_secondary_text>
+            </customize_button>
+        </bridge>
+        <development>
             <general>
-                <enabled>1</enabled>
+                <bridge_base_url>https://bridge.platforme.com</bridge_base_url>
             </general>
-        </store>
+        </development>
     </default>
 </config>

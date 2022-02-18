@@ -1,5 +1,5 @@
 define(["jquery"], ($) => {
-    const BASE_URL = "http://localhost:8080"; // TODO get from config
+    const BASE_URL = "http://localhost:8080";
 
     /**
      * Handles the provided error according to the default strategy,
@@ -41,7 +41,7 @@ define(["jquery"], ($) => {
      * @returns {String} The final locale string representing the best possible
      * locale for the current page environment.
      */
-    async function getContentLanguage(normalized = false) {
+    function getContentLanguage(normalized = false) {
         let contentLanguage = window.navigator.languages[0];
         if (normalized) contentLanguage = contentLanguage.replace(/-/g, "_");
         return contentLanguage;
@@ -143,10 +143,10 @@ define(["jquery"], ($) => {
         // the content language, store front digest and cart token, these values are
         // going to be sent in the redirection process
         const query = product.ripe_customization_query;
-        currency = currency || "eur"; // TODO get from store config
-        country = country || "pt"; // TODO get from store config
+        currency = currency || buttonConfig.currency;
+        country = country || buttonConfig.country;
 
-        locale = locale || (await getContentLanguage(true));
+        locale = locale || getContentLanguage(true);
 
         // validates that some of the mandatory values are available
         // throwing errors otherwise (ensures guarantees)
@@ -191,16 +191,16 @@ define(["jquery"], ($) => {
     ) {
         // coerces the base URL to the static one in case none is provided
         // this parameter allows dynamic usage of multiple RIPE Bridge envs
-        const baseUrl = BASE_URL;
+        const baseUrl = buttonConfig.bridgeBaseUrl || BASE_URL;
 
         // gets store base URL
-        const store = window.location.host; // TODO get from store config   
-    
+        const store = buttonConfig.storeBaseUrl.split( '/' ) [2];
+
         // determines if the customizable product (build supported) is set as
         // `active` and if not ignores the request to add the Platforme button HTML
         active = parseInt(product.ripe_customization_active);
         if (!active) return;
-    
+
         // in case there's no previous value defined, fallbacks
         // to the current location so that the user is able to
         // return back to the current page if desired
@@ -209,7 +209,7 @@ define(["jquery"], ($) => {
             urlParams.set("previous", window.location.href);
             product.ripe_customization_query = urlParams.toString();
         }
-    
+
         const injectionPoint = document.getElementById("platforme-button-injection");
         if (!injectionPoint) {
             console.error(
@@ -217,30 +217,17 @@ define(["jquery"], ($) => {
             );
             return;
         }
-    
+
         // "injects" the button's HTML into the target DOM element
         // as requested by the logic
-        const storeConfig = { // TODO get from store config 
-            enabled: true,
-            description: null,
-            meta: {},
-            button_background_color: "#000000",
-            button_orientation: "horizontal",
-            button_icon: "icon_1",
-            button_icon_position: "right",
-            button_font: "",
-            button_css: "",
-            button_text_color: "#ffffff",
-            button_primary_text: "Customize your product",
-            button_secondary_text: ""
-        };
+        const customizeButtonConfig = buttonConfig.store.customize_button;
 
-        injectionPoint.innerHTML = generateButtonComponent(storeConfig);
-    
+        injectionPoint.innerHTML = generateButtonComponent(customizeButtonConfig);
+
         document.addEventListener("change", function() {
             const queryUrl = new URL(document.URL);
             const variantId = queryUrl.searchParams.get("variant");
-    
+
             setupButton(product, store, {
                 baseUrl: baseUrl,
                 redirect: true,
@@ -255,7 +242,7 @@ define(["jquery"], ($) => {
                 variantId: variantId
             });
         });
-        
+
         setupButton(product, store, {
             baseUrl: baseUrl,
             redirect: true,
@@ -271,5 +258,5 @@ define(["jquery"], ($) => {
         });
     }
 
-    addPlatformeButton(productData);
+    addPlatformeButton(buttonConfig.product);
 });

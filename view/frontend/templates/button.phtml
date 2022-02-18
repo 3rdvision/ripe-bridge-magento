@@ -4,9 +4,18 @@
         <?php
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');
-            $productData = json_encode($product->getData());
+            $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+            $scopeConfig = $objectManager->create('\Magento\Framework\App\Config\ScopeConfigInterface');
+            $buttonConfig = array(
+                "product" => $product->getData(),
+                "store" => $scopeConfig->getValue('bridge', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "bridgeBaseUrl" => $scopeConfig->getValue('development/general/bridge_base_url', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "storeBaseUrl" => $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB),
+                "currency" => $scopeConfig->getValue('currency/options/base', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "locale" => $scopeConfig->getValue('general/locale/code', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "country" => $scopeConfig->getValue('general/country/default', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            );
         ?>
-        const productData = <?php echo $productData ?>;
-        window.productData = productData;
+        const buttonConfig = <?php echo json_encode($buttonConfig) ?>;
     </script>
 </body>

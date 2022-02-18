@@ -1,0 +1,21 @@
+<input type="button" name="import_button" id="import_button" value="Import">
+
+<style>
+#import_button {
+    color: #ffffff;
+    background: #504944;
+    padding: 8px 30px 8px 30px;
+}
+</style>
+
+<script type="text/javascript">  
+(function  () {    
+    require(["jquery"], function($) {
+        $(document).ready(function($) {
+            $("#import_button").on("click", function(e){
+                alert("Import order action here");
+            })
+        }); 
+    });
+})();
+</script>
