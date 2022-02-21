@@ -6,7 +6,8 @@ use Magento\Framework\App\Config\Value;
 
 class StoreName extends Value {
 
-    public $_storeManager;
+    private $_objectManager;
+    private $_storeManager;
 
     /**
      * @param \Magento\Framework\Model\Context $context
@@ -24,10 +25,10 @@ class StoreName extends Value {
         \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-        array $data = [],
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        array $data = []
     ) {
-        $this->_storeManager = $storeManager;
+        $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $this->_storeManager = $this->_objectManager->create("\Magento\Store\Model\StoreManagerInterface");
         parent::__construct($context, $registry, $scopeConfig, $cacheTypeList, $resource, $resourceCollection, $data);
     }
 
